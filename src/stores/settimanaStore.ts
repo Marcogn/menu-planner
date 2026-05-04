@@ -7,6 +7,12 @@ import { getOrCreateWeek } from '../storage/weeks';
 const LS_KEY = 'menuPlanner.showOptionalMeals';
 const LS_DAILY_KEY = 'menuPlanner.dailyView';
 
+/** Ritorna il giorno della settimana corrente (1=lun … 7=dom, convenzione ISO). */
+function getTodayDayOfWeek(): DayOfWeek {
+  const jsDay = new Date().getDay(); // 0=dom, 1=lun, …
+  return (jsDay === 0 ? 7 : jsDay) as DayOfWeek;
+}
+
 export const useSettimanaStore = defineStore('settimana', () => {
   const currentWeekId = ref<string>(getCurrentWeekId());
   const week = ref<Week | null>(null);
@@ -31,11 +37,6 @@ export const useSettimanaStore = defineStore('settimana', () => {
   // Giorno selezionato nella vista giornaliera (1=lun … 7=dom).
   // Calcolato dinamicamente: se siamo nella settimana corrente usa il giorno di oggi,
   // altrimenti default a lunedì (1).
-  function getTodayDayOfWeek(): DayOfWeek {
-    const jsDay = new Date().getDay(); // 0=dom, 1=lun, …
-    return (jsDay === 0 ? 7 : jsDay) as DayOfWeek;
-  }
-
   const selectedDay = ref<DayOfWeek>(getTodayDayOfWeek());
 
   const todayWeekId = computed(() => getCurrentWeekId());

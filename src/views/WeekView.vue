@@ -253,15 +253,18 @@ onMounted(async () => {
           role="tab"
           :aria-selected="settimanaStore.selectedDay === dh.day"
           :aria-controls="`day-panel-${dh.day}`"
+          :aria-label="dayDishCount(dh.day) > 0
+            ? `${dh.shortLabel} ${dh.date}, ${dayDishCount(dh.day)} ${dayDishCount(dh.day) === 1 ? 'piatto' : 'piatti'}`
+            : `${dh.shortLabel} ${dh.date}`"
           @click="settimanaStore.selectedDay = dh.day"
         >
-          <span class="day-tab-name">{{ dh.shortLabel }}</span>
-          <span class="day-tab-date">{{ dh.date }}</span>
-          <!-- Indicatore piatti: dot se ci sono piatti nel giorno -->
+          <span class="day-tab-name" aria-hidden="true">{{ dh.shortLabel }}</span>
+          <span class="day-tab-date" aria-hidden="true">{{ dh.date }}</span>
+          <!-- Indicatore piatti: dot visivo, informazione già nel aria-label del bottone -->
           <span
             v-if="dayDishCount(dh.day) > 0"
             class="day-tab-dot"
-            :aria-label="`${dayDishCount(dh.day)} piatti`"
+            aria-hidden="true"
           ></span>
         </button>
       </div>
