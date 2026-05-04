@@ -66,7 +66,8 @@
 
 ## Fase 3 — UI: Vista settimanale
 
-- [ ] **T3.1** Layout vista settimanale: griglia 7 giorni × N pasti. Pranzo e cena sempre visibili. Toggle per mostrare colazione/merende (stato persistito in localStorage).
+- [x] **T3.1** Layout vista settimanale: griglia 7 giorni × N pasti. Pranzo e cena sempre visibili. Toggle per mostrare colazione/merende (stato persistito in localStorage).
+  - `settimanaStore.ts` (Pinia): week corrente, toggle `showOptionalMeals` in localStorage. `WeekView.vue` riscritto con nuova architettura: griglia CSS Grid 7×N, pasti opzionali collassabili. Build e 81 test passano.
 - [ ] **T3.2** Navigazione settimane: pulsanti `<` e `>`, label "Settimana del lun gg/mm". Pulsante "oggi" per tornare alla settimana corrente.
 - [ ] **T3.3** Slot vuoto: pulsante "+". Slot occupato: nome piatto + chip degli Elementi.
 - [ ] **T3.4** Form aggiunta piatto: nome libero + multi-select Elementi con autocomplete. Salvataggio in IndexedDB + refresh vista.
