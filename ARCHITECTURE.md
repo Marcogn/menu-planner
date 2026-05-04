@@ -132,7 +132,7 @@ interface Week {
 
 > **Nota importante**: NON esiste un'entità `Category` separata. L'Elemento (`formaggio`, `carne rossa`, ecc.) È la categoria. Il dettaglio dell'ingrediente specifico (mozzarella, primosale, parmigiano) vive solo come testo libero in `Dish.name`.
 
-### Formato file export
+### Formato file export / backup
 
 ```json
 {
@@ -145,7 +145,17 @@ interface Week {
 ```
 
 - **Versioning obbligatorio**: il campo `version` permette retrocompatibilità futura. L'import valida la versione e rifiuta formati ignoti con messaggio chiaro.
+- **`format`** deve essere esattamente `"meal-planner-export"` — usato per distinguere i file da altri JSON.
 - **JSON puro**, niente compressione. La dimensione è trascurabile (decine di KB).
+- **Validazione schema**: il parsing usa Zod (`BackupDataSchema` in `src/storage/backup.ts`). Errori ritornati con `BackupImportError` e messaggi localizzati in italiano.
+- **Sovrascrittura atomica**: l'import usa una transazione Dexie (`appDb.transaction('rw', ...)`) per garantire che il DB non rimanga in uno stato parziale.
+
+### localStorage — chiavi utilizzate
+
+| Chiave | Tipo | Descrizione |
+|---|---|---|
+| `menuPlanner.showOptionalMeals` | `"true"` / `"false"` | Toggle visibilità pasti opzionali |
+| `menuPlanner.lastBackup` | timestamp (ms come stringa) | Data dell'ultimo backup eseguito |
 
 ## 5. Testing
 
