@@ -86,7 +86,7 @@ async function save() {
 </script>
 
 <template>
-  <div class="overlay" role="dialog" :aria-label="title" aria-modal="true" @click.self="emit('close')">
+  <div class="overlay" role="dialog" :aria-label="title" aria-modal="true" @click.self="emit('close')" @keydown.esc="emit('close')">
     <div class="modal">
       <!-- Header -->
       <div class="modal-header">
@@ -176,6 +176,7 @@ async function save() {
   border-radius: 8px;
   padding: 1.25rem 1.5rem 1.5rem;
   width: min(460px, 95vw);
+  max-height: 90vh; /* fallback for browsers without dvh */
   max-height: 90dvh;
   overflow-y: auto;
   display: flex;

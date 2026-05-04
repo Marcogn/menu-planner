@@ -73,9 +73,18 @@ function getChipData(elementId: string): { label: string; exceeded: boolean } {
   };
 }
 
-// T3.3 — piatti per slot
+// T3.3 — piatti per slot: mappa pre-calcolata per evitare ricerche ripetute nel template
+const slotsMap = computed(() => {
+  const map = new Map<string, Dish[]>();
+  if (!settimanaStore.week) return map;
+  for (const slot of settimanaStore.week.slots) {
+    map.set(`${slot.day}-${slot.meal}`, slot.dishes);
+  }
+  return map;
+});
+
 function getDishes(day: DayOfWeek, meal: MealType): Dish[] {
-  return settimanaStore.getDishesForSlot(day, meal);
+  return slotsMap.value.get(`${day}-${meal}`) ?? [];
 }
 
 // T3.5 — elimina piatto
@@ -225,7 +234,7 @@ onMounted(async () => {
                       aria-label="Modifica piatto"
                       @click.stop="openEditForm(dh.day, meal.type, dish)"
                     >
-                      ✏️
+                      <span aria-hidden="true">✏️</span>
                     </button>
                     <button
                       class="action-btn action-btn--danger"
@@ -233,7 +242,7 @@ onMounted(async () => {
                       aria-label="Elimina piatto"
                       @click.stop="deleteDish(dh.day, meal.type, dish.id)"
                     >
-                      🗑️
+                      <span aria-hidden="true">🗑️</span>
                     </button>
                   </div>
                 </div>
