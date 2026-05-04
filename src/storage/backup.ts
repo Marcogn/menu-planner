@@ -92,7 +92,9 @@ export const BackupDataSchema = z.object({
 
 /**
  * Raccoglie tutti gli elementId referenziati dai piatti nelle settimane date.
- * Ritorna un Set di ID univoci.
+ *
+ * @param weeks - Array di settimane da analizzare.
+ * @returns Un Set di ID univoci referenziati dai piatti.
  */
 function collectReferencedElementIds(weeks: Week[]): Set<string> {
   const ids = new Set<string>();

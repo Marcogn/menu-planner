@@ -107,7 +107,7 @@ async function handleExport() {
     const a = document.createElement('a');
     const date = new Date().toISOString().slice(0, 10);
     a.href = url;
-    a.download = `menu-planner-condivisione-${date}.json`;
+    a.download = `menu-planner-share-${date}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

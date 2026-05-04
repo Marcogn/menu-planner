@@ -82,10 +82,10 @@ const elementMap = computed<Map<string, Element>>(() => {
 });
 
 /**
- * Lista ordinata (day ASC, meal per ordine cronologico) degli slot non vuoti
- * per una settimana nel file di preview.
+ * Ritorna gli slot non vuoti della settimana ordinati per giorno (ASC)
+ * e pasto (ordine cronologico).
  */
-function slotsOf(week: BackupData['weeks'][0]) {
+function getOrderedNonEmptySlots(week: BackupData['weeks'][0]) {
   const MEAL_ORDER = [
     'colazione',
     'merenda_mattina',
@@ -242,13 +242,13 @@ async function onFileSelected(event: Event) {
               </span>
             </summary>
 
-            <div v-if="slotsOf(week).length === 0" class="no-dishes">
+            <div v-if="getOrderedNonEmptySlots(week).length === 0" class="no-dishes">
               Nessun piatto in questa settimana.
             </div>
 
             <ul v-else class="slot-list">
               <li
-                v-for="slot in slotsOf(week)"
+                v-for="slot in getOrderedNonEmptySlots(week)"
                 :key="`${slot.day}-${slot.meal}`"
                 class="slot-item"
               >
