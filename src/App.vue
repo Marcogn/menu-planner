@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router';
 import IosInstallBanner from './components/IosInstallBanner.vue';
+import { useBackupStore } from './stores/backupStore';
+
+const backupStore = useBackupStore();
 </script>
 
 <template>
@@ -10,7 +13,10 @@ import IosInstallBanner from './components/IosInstallBanner.vue';
       <nav aria-label="Navigazione principale">
         <RouterLink to="/week">Settimana</RouterLink>
         <RouterLink to="/elementi">Elementi</RouterLink>
-        <RouterLink to="/backup">Backup</RouterLink>
+        <RouterLink to="/backup" class="nav-backup">
+          Backup
+          <span v-if="backupStore.needsBackup" class="backup-badge" aria-label="Backup consigliato"></span>
+        </RouterLink>
       </nav>
     </div>
   </header>
@@ -74,6 +80,21 @@ nav a.router-link-active {
   color: #1a1a1a;
   font-weight: 600;
   border-bottom-color: #1a7a1a;
+}
+
+.nav-backup {
+  position: relative;
+}
+
+.backup-badge {
+  position: absolute;
+  top: 10px;
+  right: 6px;
+  width: 8px;
+  height: 8px;
+  background: #f9a825;
+  border-radius: 50%;
+  border: 1.5px solid #fff;
 }
 
 main {

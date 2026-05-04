@@ -90,10 +90,14 @@
 
 ## Fase 5 — Backup completo
 
-- [ ] **T5.1** `src/storage/backup.ts`: `exportAll()` ritorna blob JSON con format/version/elements/weeks.
-- [ ] **T5.2** `importAll(file)`: parsing, validazione versione e schema, sovrascrittura totale (con conferma). In caso di errore di parsing, messaggio chiaro all'utente.
-- [ ] **T5.3** UI Pagina Backup: pulsante "Esporta backup" (download file), pulsante "Importa backup" (file picker + conferma).
-- [ ] **T5.4** Tracciare data ultimo backup in localStorage. Mostrare badge/banner non invadente quando >14 giorni.
+- [x] **T5.1** `src/storage/backup.ts`: `exportAll()` ritorna blob JSON con format/version/elements/weeks.
+  - `exportAll()` legge tutti gli Elementi e Settimane dal DB e ritorna `Blob` JSON `{ format, version, exportedAt, elements, weeks }`. 7 test passano.
+- [x] **T5.2** `importAll(file)`: parsing, validazione versione e schema, sovrascrittura totale (con conferma). In caso di errore di parsing, messaggio chiaro all'utente.
+  - `BackupImportError` per tutti i casi d'errore localizzati (JSON malformato, formato sconosciuto, versione non supportata, schema Zod non valido). Sovrascrittura atomica con transazione Dexie. 10 nuovi test (round-trip, errori, non-modificazione DB in caso di errore).
+- [x] **T5.3** UI Pagina Backup: pulsante "Esporta backup" (download file), pulsante "Importa backup" (file picker + conferma).
+  - `BackupView.vue` riscritta: sezione export con download automatico + `recordBackup()`, sezione import con file picker nascosto + modal di conferma, messaggi errore/successo inline.
+- [x] **T5.4** Tracciare data ultimo backup in localStorage. Mostrare badge/banner non invadente quando >14 giorni.
+  - `backupStore.ts` (Pinia): `lastBackupTimestamp` da `menuPlanner.lastBackup` in localStorage, `needsBackup` computed (>14gg o mai), `recordBackup()`. Banner giallo in `BackupView.vue`. Pallino arancione nel tab "Backup" di `App.vue`.
 
 ## Fase 6 — Condivisione menù (export/import per utente)
 
