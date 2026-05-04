@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import type { Element } from '../domain/types';
 import type { FrequencyEntry } from '../domain/frequency';
 
@@ -70,19 +70,47 @@ const rows = computed<ReminderRow[]>(() => {
 
   return result;
 });
+
+// T4.2 — toggle "solo sforati"
+const showOnlyExceeded = ref(false);
+
+const visibleRows = computed(() =>
+  showOnlyExceeded.value ? rows.value.filter((r) => r.exceeded) : rows.value,
+);
+
+const exceededCount = computed(() => rows.value.filter((r) => r.exceeded).length);
 </script>
 
 <template>
   <section class="reminder" aria-label="Riepilogo frequenze settimanali">
-    <h2 class="reminder__title">Frequenze settimana</h2>
+    <div class="reminder__header">
+      <h2 class="reminder__title">Frequenze settimana</h2>
+      <button
+        v-if="rows.length > 0"
+        class="reminder__toggle"
+        :aria-pressed="showOnlyExceeded"
+        :title="showOnlyExceeded ? 'Mostra tutti gli elementi' : 'Mostra solo sforati'"
+        @click="showOnlyExceeded = !showOnlyExceeded"
+      >
+        <span v-if="showOnlyExceeded">Tutti</span>
+        <span v-else>
+          Solo sforati
+          <span v-if="exceededCount > 0" class="reminder__badge">{{ exceededCount }}</span>
+        </span>
+      </button>
+    </div>
 
     <p v-if="rows.length === 0" class="reminder__empty">
       Nessun elemento da mostrare — aggiungi piatti al menù.
     </p>
 
+    <p v-else-if="visibleRows.length === 0" class="reminder__empty">
+      Nessun elemento sforato questa settimana. 🎉
+    </p>
+
     <ul v-else class="reminder__list">
       <li
-        v-for="row in rows"
+        v-for="row in visibleRows"
         :key="row.id"
         class="reminder__row"
         :class="{
@@ -107,10 +135,18 @@ const rows = computed<ReminderRow[]>(() => {
   padding-top: 0.75rem;
 }
 
+.reminder__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
 .reminder__title {
   font-size: 0.9rem;
   font-weight: 700;
-  margin: 0 0 0.5rem 0;
+  margin: 0;
   color: #333;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -164,5 +200,37 @@ const rows = computed<ReminderRow[]>(() => {
 
 .reminder__row--exceeded .reminder__count {
   font-weight: 700;
+}
+
+.reminder__toggle {
+  font-size: 0.78rem;
+  padding: 3px 8px;
+  min-height: 30px;
+  border-radius: 4px;
+  border: 1px solid #bbb;
+  background: #f5f5f5;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.reminder__toggle:hover {
+  background: #e8e8e8;
+}
+
+.reminder__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #cc0000;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 0 5px;
+  min-width: 16px;
+  line-height: 1.6;
 }
 </style>

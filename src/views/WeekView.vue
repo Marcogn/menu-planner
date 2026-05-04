@@ -57,7 +57,10 @@ const isCurrentWeek = computed(
   () => settimanaStore.currentWeekId === getCurrentWeekId(),
 );
 
-// T3.6 — frequenze settimanali calcolate reattivamente
+// T3.6 / T4.3 — frequenze settimanali calcolate reattivamente.
+// La Map si ricalcola automaticamente ogni volta che settimanaStore.week cambia
+// (cioè dopo ogni add/remove piatto che chiama settimanaStore.refresh()),
+// così il pannello ReminderFrequenze si aggiorna senza alcun reload manuale.
 const frequencies = computed(() => {
   if (!settimanaStore.week) return new Map();
   return computeWeeklyFrequencies(settimanaStore.week, elementiStore.elements);
